@@ -22,3 +22,12 @@
 .animate-fade-in {
   animation: fade-in 0.8s ease-out;
 }
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
