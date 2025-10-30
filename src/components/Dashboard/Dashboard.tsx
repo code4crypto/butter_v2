@@ -20,8 +20,10 @@ export function Dashboard() {
 
   useEffect(() => {
     const loadTokens = async () => {
+      console.log('🔄 Loading tokens for tab:', activeTab);
       setLoading(true);
       const data = await fetchTokens(activeTab);
+      console.log('✅ Got', data.length, 'tokens');
       setTokens(data);
       setLoading(false);
     };

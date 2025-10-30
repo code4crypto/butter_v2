@@ -36,6 +36,7 @@ export interface APITokenResponse {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 export async function fetchTokens(community?: string): Promise<TokenData[]> {
+  console.log('=== MOCK DATA ONLY - NO API ===');
   return getMockTokens();
 }
 
