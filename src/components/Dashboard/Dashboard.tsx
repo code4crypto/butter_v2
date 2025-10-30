@@ -14,7 +14,9 @@ export function Dashboard() {
   const [loading, setLoading] = useState(true);
 
   const contracts = tokens.map(t => t.contract);
-  const { data: wsData } = useWebSocket(contracts, '1m');
+  console.log('🎯 Dashboard has', contracts.length, 'contracts:', contracts.slice(0, 2));
+  const { data: wsData, isConnected } = useWebSocket(contracts, '1m');
+  console.log('📊 WebSocket connected:', isConnected, 'data entries:', wsData.size);
 
   useEffect(() => {
     const loadTokens = async () => {

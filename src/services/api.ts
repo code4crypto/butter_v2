@@ -36,23 +36,7 @@ export interface APITokenResponse {
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 export async function fetchTokens(community?: string): Promise<TokenData[]> {
-  try {
-    const url = community && community !== 'All'
-      ? `${API_BASE_URL}/api/tokens?community=${encodeURIComponent(community)}`
-      : `${API_BASE_URL}/api/tokens`;
-
-    const response = await fetch(url);
-
-    if (!response.ok) {
-      throw new Error(`Failed to fetch tokens: ${response.status}`);
-    }
-
-    const data: APITokenResponse = await response.json();
-    return data.tokens;
-  } catch (error) {
-    console.log('Using mock data (API not available)');
-    return getMockTokens();
-  }
+  return getMockTokens();
 }
 
 export async function fetchTokenDetails(symbol: string): Promise<TokenData | null> {
