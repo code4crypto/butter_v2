@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { createChart, ColorType, IChartApi, ISeriesApi } from 'lightweight-charts';
+import { createChart, ColorType, type IChartApi, type ISeriesApi } from 'lightweight-charts';
 
 interface MiniChartProps {
   data: Array<{ time: number; value: number }>;
@@ -16,6 +16,7 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
     if (!chartContainerRef.current) return;
 
     try {
+      console.log('Creating chart with lightweight-charts');
       const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
@@ -45,7 +46,8 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
       handleScale: false,
     });
 
-    const series = chart.addAreaSeries({
+    console.log('Chart created successfully, adding area series');
+      const series = chart.addAreaSeries({
       lineColor: color,
       topColor: color + '40',
       bottomColor: color + '00',
