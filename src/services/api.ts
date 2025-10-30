@@ -1,6 +1,7 @@
 export interface TokenData {
   name: string;
   symbol: string;
+  contract: string;
   marketCap: string;
   liquidity: string;
   volume: string;
@@ -110,6 +111,7 @@ function getMockTokens(): TokenData[] {
     {
       name: "Don't Even Trip Dawg",
       symbol: 'TRIP',
+      contract: 'So11111111111111111111111111111111111111112',
       marketCap: '$82.9K',
       liquidity: '$45.2K',
       volume: '$10.5K',
@@ -137,6 +139,7 @@ function getMockTokens(): TokenData[] {
     {
       name: 'CORTEX',
       symbol: 'CORTEX',
+      contract: 'EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v',
       marketCap: '$82.7K',
       liquidity: '$38.1K',
       volume: '$4.75K',
@@ -164,6 +167,7 @@ function getMockTokens(): TokenData[] {
     {
       name: 'PayNet Protocol',
       symbol: 'PAYNET',
+      contract: 'Es9vMFrzaCERmJfrF4H2FYD4KCoNkY11McCe8BenwNYB',
       marketCap: '$53.5K',
       liquidity: '$23.3K',
       volume: '$623',
@@ -191,6 +195,7 @@ function getMockTokens(): TokenData[] {
     {
       name: 'LOOTFI',
       symbol: 'LOOTFI',
+      contract: 'DezXAZ8z7PnrnRJjz3wXBoRgixCa6xjnB7YaB1pPB263',
       marketCap: '$91.8K',
       liquidity: '$52.7K',
       volume: '$488',
@@ -218,6 +223,7 @@ function getMockTokens(): TokenData[] {
     {
       name: 'PAPEG',
       symbol: 'PAPEG',
+      contract: 'mSoLzYCxHdYgdzU16g5QSh3i5K3z3KZK7ytfqcJm7So',
       marketCap: '$276K',
       liquidity: '$158K',
       volume: '$212',
@@ -245,6 +251,7 @@ function getMockTokens(): TokenData[] {
     {
       name: 'Zerox Society',
       symbol: 'ZEROXS',
+      contract: '7vfCXTUXx5WJV5JADk17DUJ4ksgau7utNKj4b963voxs',
       marketCap: '$31.0K',
       liquidity: '$15.8K',
       volume: '$35.7',

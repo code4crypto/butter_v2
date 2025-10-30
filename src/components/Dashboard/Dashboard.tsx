@@ -3,6 +3,7 @@ import { Header } from './Header';
 import { CommunityTabs } from './CommunityTabs';
 import { TokenCard } from './TokenCard';
 import { fetchTokens, type TokenData } from '../../services/api';
+import { useWebSocket } from '../../hooks/useWebSocket';
 
 const MOCK_COMMUNITIES = ['All', 'Sauce', 'Alpha DAO', 'Degen Grp', 'Crypto CT'];
 
@@ -11,6 +12,9 @@ export function Dashboard() {
   const [searchQuery, setSearchQuery] = useState('');
   const [tokens, setTokens] = useState<TokenData[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const contracts = tokens.map(t => t.contract);
+  const { data: wsData } = useWebSocket(contracts, '1m');
 
   useEffect(() => {
     const loadTokens = async () => {
@@ -21,11 +25,32 @@ export function Dashboard() {
     };
 
     loadTokens();
-
-    const interval = setInterval(loadTokens, 30000);
-
-    return () => clearInterval(interval);
   }, [activeTab]);
+
+  useEffect(() => {
+    if (wsData.size === 0) return;
+
+    setTokens(prevTokens =>
+      prevTokens.map(token => {
+        const liveData = wsData.get(token.contract);
+        if (!liveData) return token;
+
+        const chartData = liveData.ohlcv.map(candle => ({
+          time: candle.time,
+          value: candle.close,
+        }));
+
+        return {
+          ...token,
+          priceChange: liveData.priceChange24h,
+          volume: `$${(liveData.volume24h / 1000).toFixed(1)}K`,
+          marketCap: `$${(liveData.marketCap / 1000).toFixed(1)}K`,
+          liquidity: `$${(liveData.liquidity / 1000).toFixed(1)}K`,
+          chartData: chartData.length > 0 ? chartData : token.chartData,
+        };
+      })
+    );
+  }, [wsData]);
 
   const filteredTokens = tokens.filter((token) =>
     token.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
