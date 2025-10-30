@@ -1,34 +1,7 @@
 import { Info, Globe, TrendingUp, TrendingDown, Users, Shield, Droplet, Flame } from 'lucide-react';
 import { useState } from 'react';
-
-interface TokenData {
-  name: string;
-  symbol: string;
-  marketCap: string;
-  liquidity: string;
-  volume: string;
-  volume5m: string;
-  buys: number;
-  buyVolume: string;
-  sells: number;
-  sellVolume: string;
-  netVolume: string;
-  priceChange: number;
-  top10Holders: string;
-  devHoldings: string;
-  snipersHoldings: string;
-  insiders: string;
-  bundlers: string;
-  lpBurned: string;
-  holders: number;
-  proTraders: number;
-  dexPaid: string;
-  txns: number;
-  buyTxns: number;
-  sellTxns: number;
-  imageUrl?: string;
-  chartData: number[];
-}
+import { MiniChart } from '../Chart/MiniChart';
+import type { TokenData } from '../../services/api';
 
 interface TokenCardProps {
   token: TokenData;
@@ -85,8 +58,18 @@ export function TokenCard({ token, onTrade }: TokenCardProps) {
           </button>
         </div>
 
-        <div className="h-24 bg-slate-900/50 rounded-lg flex items-center justify-center">
-          <div className="text-slate-600 text-xs">Chart Area</div>
+        <div className="h-24 bg-slate-900/50 rounded-lg overflow-hidden">
+          {token.chartData.length > 0 ? (
+            <MiniChart
+              data={token.chartData}
+              color={isPositive ? '#10b981' : '#ef4444'}
+              height={96}
+            />
+          ) : (
+            <div className="h-full flex items-center justify-center">
+              <div className="text-slate-600 text-xs">Loading chart...</div>
+            </div>
+          )}
         </div>
 
         <div className="space-y-2">
