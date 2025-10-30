@@ -33,11 +33,60 @@ export interface APITokenResponse {
   lastUpdate: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = 'https://api.buttertrade.xyz';
 
 export async function fetchTokens(community?: string): Promise<TokenData[]> {
-  console.log('=== MOCK DATA ONLY - NO API ===');
-  return getMockTokens();
+  try {
+    const endpoint = community && community !== 'All'
+      ? `${API_BASE_URL}/tokens?community=${encodeURIComponent(community)}`
+      : `${API_BASE_URL}/tokens`;
+
+    const response = await fetch(endpoint);
+
+    if (!response.ok) {
+      console.warn('API request failed, using mock data');
+      return getMockTokens();
+    }
+
+    const data = await response.json();
+
+    if (Array.isArray(data)) {
+      return data.map((token: any) => ({
+        name: token.name || token.symbol,
+        symbol: token.symbol,
+        contract: token.contract || token.contractAddress || token.address,
+        marketCap: formatCurrency(token.marketCap || token.market_cap || 0),
+        liquidity: formatCurrency(token.liquidity || 0),
+        volume: formatCurrency(token.volume || 0),
+        volume5m: formatCurrency(token.volume5m || token.volume_5m || 0),
+        buys: token.buys || 0,
+        buyVolume: formatCurrency(token.buyVolume || token.buy_volume || 0),
+        sells: token.sells || 0,
+        sellVolume: formatCurrency(token.sellVolume || token.sell_volume || 0),
+        netVolume: formatNetVolume(token.netVolume || token.net_volume || 0),
+        priceChange: token.priceChange || token.price_change || 0,
+        top10Holders: formatPercent(token.top10Holders || token.top_10_holders || 0),
+        devHoldings: formatPercent(token.devHoldings || token.dev_holdings || 0),
+        snipersHoldings: formatPercent(token.snipersHoldings || token.snipers_holdings || 0),
+        insiders: formatPercent(token.insiders || 0),
+        bundlers: formatPercent(token.bundlers || 0),
+        lpBurned: formatPercent(token.lpBurned || token.lp_burned || 0),
+        holders: token.holders || 0,
+        proTraders: token.proTraders || token.pro_traders || 0,
+        dexPaid: token.dexPaid || token.dex_paid || 'Unknown',
+        txns: token.txns || token.transactions || 0,
+        buyTxns: token.buyTxns || token.buy_txns || 0,
+        sellTxns: token.sellTxns || token.sell_txns || 0,
+        imageUrl: token.imageUrl || token.image_url || token.image,
+        chartData: [],
+      }));
+    }
+
+    return getMockTokens();
+  } catch (error) {
+    console.error('Error fetching tokens:', error);
+    return getMockTokens();
+  }
 }
 
 export async function fetchTokenDetails(symbol: string): Promise<TokenData | null> {
@@ -89,6 +138,21 @@ function generateMockChartData(points: number = 50): Array<{ time: number; value
   }
 
   return data;
+}
+
+function formatCurrency(value: number): string {
+  if (value >= 1000000) return `$${(value / 1000000).toFixed(1)}M`;
+  if (value >= 1000) return `$${(value / 1000).toFixed(1)}K`;
+  return `$${value.toFixed(0)}`;
+}
+
+function formatPercent(value: number): string {
+  return `${value.toFixed(2)}%`;
+}
+
+function formatNetVolume(value: number): string {
+  const prefix = value >= 0 ? '+' : '';
+  return `${prefix}${formatCurrency(Math.abs(value))}`;
 }
 
 function getMockTokens(): TokenData[] {
