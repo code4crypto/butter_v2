@@ -42,7 +42,7 @@ export class ButterWebSocket {
       this.ws = new WebSocket(url);
 
       this.ws.onopen = () => {
-        console.log('WebSocket connected to Butter Terminal API');
+        console.log('✅ WebSocket connected to:', url);
         this.reconnectAttempts = 0;
         this.resubscribeToChannels();
       };
@@ -50,13 +50,15 @@ export class ButterWebSocket {
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          console.log('📨 Raw WS message:', data);
           if (data.action === 'pong' || !data.contractAddress) {
+            console.log('⏭️ Skipping message (pong or no contract)');
             return;
           }
-          console.log('Received OHLCV data:', data);
+          console.log('✅ Processing OHLCV data for:', data.contractAddress);
           this.messageHandlers.forEach(handler => handler(data));
         } catch (error) {
-          console.error('Error parsing WebSocket message:', error);
+          console.error('❌ Error parsing WebSocket message:', error);
         }
       };
 
@@ -90,9 +92,13 @@ export class ButterWebSocket {
   }
 
   private resubscribeToChannels(): void {
-    if (this.subscribedChannels.size === 0) return;
+    if (this.subscribedChannels.size === 0) {
+      console.log('⚠️ No channels to subscribe');
+      return;
+    }
 
     const channels = Array.from(this.subscribedChannels);
+    console.log('📡 Subscribing to channels:', channels);
     this.send({
       action: 'subscribeMany',
       channels,
@@ -101,14 +107,18 @@ export class ButterWebSocket {
 
   subscribe(contracts: string[], timeframe: string = '1m'): void {
     const channels = contracts.map(contract => `${contract}:${timeframe}`);
+    console.log('🔔 Subscribe called for:', { contracts: contracts.length, channels: channels.slice(0, 3) });
 
     channels.forEach(channel => this.subscribedChannels.add(channel));
 
     if (this.ws?.readyState === WebSocket.OPEN) {
+      console.log('📤 Sending subscription message:', { action: 'subscribeMany', channelCount: channels.length });
       this.send({
         action: 'subscribeMany',
         channels,
       });
+    } else {
+      console.log('⚠️ WebSocket not open, state:', this.ws?.readyState);
     }
   }
 
