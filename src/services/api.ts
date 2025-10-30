@@ -49,7 +49,7 @@ export async function fetchTokens(community?: string): Promise<TokenData[]> {
     const data: APITokenResponse = await response.json();
     return data.tokens;
   } catch (error) {
-    console.error('Error fetching tokens:', error);
+    console.log('Using mock data (API not available)');
     return getMockTokens();
   }
 }

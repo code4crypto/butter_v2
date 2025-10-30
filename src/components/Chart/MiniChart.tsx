@@ -15,7 +15,8 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
   useEffect(() => {
     if (!chartContainerRef.current) return;
 
-    const chart = createChart(chartContainerRef.current, {
+    try {
+      const chart = createChart(chartContainerRef.current, {
       layout: {
         background: { type: ColorType.Solid, color: 'transparent' },
         textColor: '#64748b',
@@ -56,27 +57,34 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
     chartRef.current = chart;
     seriesRef.current = series;
 
-    const handleResize = () => {
-      if (chartContainerRef.current && chartRef.current) {
-        chartRef.current.applyOptions({
-          width: chartContainerRef.current.clientWidth,
-        });
-      }
-    };
+      const handleResize = () => {
+        if (chartContainerRef.current && chartRef.current) {
+          chartRef.current.applyOptions({
+            width: chartContainerRef.current.clientWidth,
+          });
+        }
+      };
 
-    window.addEventListener('resize', handleResize);
+      window.addEventListener('resize', handleResize);
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      chart.remove();
-    };
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        chart.remove();
+      };
+    } catch (error) {
+      console.error('Error creating chart:', error);
+    }
   }, [color, height]);
 
   useEffect(() => {
     if (seriesRef.current && data.length > 0) {
-      seriesRef.current.setData(data);
-      if (chartRef.current) {
-        chartRef.current.timeScale().fitContent();
+      try {
+        seriesRef.current.setData(data);
+        if (chartRef.current) {
+          chartRef.current.timeScale().fitContent();
+        }
+      } catch (error) {
+        console.error('Error setting chart data:', error);
       }
     }
   }, [data]);
