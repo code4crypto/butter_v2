@@ -32,20 +32,25 @@ export function Dashboard() {
 
     setTokens(prevTokens =>
       prevTokens.map(token => {
-        const liveData = wsData.get(token.contract);
-        if (!liveData) return token;
+        const ohlcvArray = wsData.get(token.contract);
+        if (!ohlcvArray || ohlcvArray.length === 0) return token;
 
-        const chartData = liveData.ohlcv.map(candle => ({
+        const chartData = ohlcvArray.map(candle => ({
           time: candle.time,
           value: candle.close,
         }));
 
+        const latestCandle = ohlcvArray[ohlcvArray.length - 1];
+        const firstCandle = ohlcvArray[0];
+        const priceChange = firstCandle.close > 0
+          ? ((latestCandle.close - firstCandle.close) / firstCandle.close) * 100
+          : 0;
+
         return {
           ...token,
-          priceChange: liveData.priceChange24h,
-          volume: `$${(liveData.volume24h / 1000).toFixed(1)}K`,
-          marketCap: `$${(liveData.marketCap / 1000).toFixed(1)}K`,
-          liquidity: `$${(liveData.liquidity / 1000).toFixed(1)}K`,
+          priceChange,
+          volume: `$${(latestCandle.volume.dollar / 1000).toFixed(1)}K`,
+          marketCap: latestCandle.marketCap ? `$${(latestCandle.marketCap / 1000).toFixed(1)}K` : token.marketCap,
           chartData: chartData.length > 0 ? chartData : token.chartData,
         };
       })

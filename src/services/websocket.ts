@@ -4,22 +4,20 @@ export interface OHLCVData {
   high: number;
   low: number;
   close: number;
-  volume: number;
+  volume: {
+    sol: number;
+    dollar: number;
+    buy: number;
+    sell: number;
+  };
+  marketCap?: number;
+  isComplete: boolean;
+  contractAddress: string;
+  channelName: string;
+  timeframe: string;
 }
 
-export interface TokenPriceData {
-  contract: string;
-  symbol: string;
-  name: string;
-  price: number;
-  priceChange24h: number;
-  volume24h: number;
-  marketCap: number;
-  liquidity: number;
-  ohlcv: OHLCVData[];
-}
-
-type MessageHandler = (data: TokenPriceData) => void;
+type MessageHandler = (data: OHLCVData) => void;
 
 export class ButterWebSocket {
   private ws: WebSocket | null = null;
@@ -52,6 +50,10 @@ export class ButterWebSocket {
       this.ws.onmessage = (event) => {
         try {
           const data = JSON.parse(event.data);
+          if (data.action === 'pong' || !data.contractAddress) {
+            return;
+          }
+          console.log('Received OHLCV data:', data);
           this.messageHandlers.forEach(handler => handler(data));
         } catch (error) {
           console.error('Error parsing WebSocket message:', error);
