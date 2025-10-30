@@ -6,10 +6,12 @@ export function useWebSocket(contracts: string[], timeframe: string = '1m') {
   const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
+    if (contracts.length === 0) return;
+
     butterWebSocket.connect();
-    setIsConnected(true);
 
     const unsubscribe = butterWebSocket.onMessage((ohlcvData: OHLCVData) => {
+      console.log('📊 Hook received data for:', ohlcvData.contractAddress);
       setData(prev => {
         const newMap = new Map(prev);
         const existing = newMap.get(ohlcvData.contractAddress) || [];
@@ -19,15 +21,15 @@ export function useWebSocket(contracts: string[], timeframe: string = '1m') {
       });
     });
 
-    if (contracts.length > 0) {
-      console.log('Subscribing to contracts:', contracts);
+    const subscribeTimeout = setTimeout(() => {
+      console.log('⏰ Delayed subscription to contracts:', contracts.slice(0, 3));
       butterWebSocket.subscribe(contracts, timeframe);
-    }
+      setIsConnected(true);
+    }, 500);
 
     return () => {
-      if (contracts.length > 0) {
-        butterWebSocket.unsubscribe(contracts, timeframe);
-      }
+      clearTimeout(subscribeTimeout);
+      butterWebSocket.unsubscribe(contracts, timeframe);
       unsubscribe();
     };
   }, [contracts.join(','), timeframe]);
