@@ -81,13 +81,16 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
   useEffect(() => {
     if (seriesRef.current && data.length > 0) {
       try {
+        console.log('Setting chart data:', data.length, 'points');
         seriesRef.current.setData(data);
         if (chartRef.current) {
           chartRef.current.timeScale().fitContent();
         }
       } catch (error) {
-        console.error('Error setting chart data:', error);
+        console.error('Error setting chart data:', error, data.slice(0, 2));
       }
+    } else {
+      console.log('Chart not ready or no data:', { hasChart: !!seriesRef.current, dataLength: data.length });
     }
   }, [data]);
 

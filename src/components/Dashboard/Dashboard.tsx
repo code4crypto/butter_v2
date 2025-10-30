@@ -23,7 +23,7 @@ export function Dashboard() {
       console.log('🔄 Loading tokens for tab:', activeTab);
       setLoading(true);
       const data = await fetchTokens(activeTab);
-      console.log('✅ Got', data.length, 'tokens');
+      console.log('✅ Got', data.length, 'tokens with chart data:', data[0]?.chartData?.length);
       setTokens(data);
       setLoading(false);
     };
