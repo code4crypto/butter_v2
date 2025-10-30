@@ -1,4 +1,4 @@
-import { Info, Globe, TrendingUp, TrendingDown, Users, Shield, Droplet, Flame } from 'lucide-react';
+import { Info, Globe, TrendingUp, TrendingDown, Users, Shield, Droplet, Flame, ArrowRightLeft } from 'lucide-react';
 import { useState } from 'react';
 import { MiniChart } from '../Chart/MiniChart';
 import type { TokenData } from '../../services/api';
@@ -193,96 +193,50 @@ export function TokenCard({ token, onTrade }: TokenCardProps) {
           </div>
         </div>
 
-        {!isExpanded && (
+        <div className="flex items-center justify-center">
           <button
             onClick={() => onTrade(token)}
-            className="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 text-sm font-semibold rounded-lg transition-all duration-200"
+            className="group relative w-10 h-10 bg-amber-500/20 hover:bg-amber-500 border border-amber-500/40 hover:border-amber-500 rounded-lg transition-all duration-200 flex items-center justify-center"
+            title="Quick Trade"
           >
-            Trade
+            <ArrowRightLeft className="w-4 h-4 text-amber-400 group-hover:text-slate-900 transition-colors duration-200" />
+            <span className="absolute -bottom-6 left-1/2 -translate-x-1/2 text-xs text-slate-500 group-hover:text-amber-400 transition-colors duration-200 whitespace-nowrap">
+              Trade
+            </span>
           </button>
-        )}
+        </div>
       </div>
 
       {isExpanded && (
-        <div className="border-t border-slate-700 bg-slate-800/80 p-4 space-y-3">
-          <h4 className="text-center text-white text-sm font-semibold">QUICK TRADE</h4>
-
-          <div className="space-y-2">
-            <label className="block text-xs text-slate-400">Amount:</label>
-            <input
-              type="number"
-              value={tradeAmount}
-              onChange={(e) => setTradeAmount(e.target.value)}
-              placeholder="Enter SOL amount"
-              className="w-full py-2 px-3 bg-slate-900 border border-slate-700 rounded-lg text-white text-sm placeholder-slate-500 focus:outline-none focus:border-amber-500 transition-colors duration-200"
-            />
+        <div className="border-t border-slate-700 bg-slate-800/80 p-3 space-y-2">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400">Quick Trade</span>
+            <span className="text-xs text-slate-500">Bal: 2.45 SOL</span>
           </div>
 
-          <div className="grid grid-cols-3 gap-2">
+          <div className="grid grid-cols-3 gap-1.5">
             {quickAmounts.map((amount) => (
               <button
                 key={amount}
                 onClick={() => handleQuickAmountSelect(amount)}
-                className={`py-1.5 px-2 rounded-lg border transition-all duration-200 ${
+                className={`py-1 px-1.5 rounded border text-xs transition-all duration-200 ${
                   selectedQuickAmount === amount
                     ? 'border-amber-500 bg-amber-500/10 text-amber-400'
                     : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-600'
                 }`}
               >
-                <div className="text-sm font-semibold">{amount}</div>
-                <div className="text-xs">SOL</div>
+                {amount} SOL
               </button>
             ))}
           </div>
 
-          <div className="space-y-1 text-xs">
-            <div className="flex justify-between text-slate-400">
-              <span>You'll receive:</span>
-              <span className="text-white">~1,234 {token.symbol}</span>
-            </div>
-            <div className="flex justify-between text-slate-400">
-              <span>Price Impact:</span>
-              <span className="text-white">0.5%</span>
-            </div>
-            <div className="flex justify-between text-slate-400">
-              <span>Fee:</span>
-              <span className="text-white">0.001 SOL</span>
-            </div>
-          </div>
-
-          <div className="space-y-2">
-            <label className="block text-xs text-slate-400">Slippage:</label>
-            <div className="flex gap-2">
-              {[1, 2, 5].map((value) => (
-                <button
-                  key={value}
-                  onClick={() => setSlippage(value)}
-                  className={`flex-1 py-1.5 text-xs rounded-lg border transition-all duration-200 ${
-                    slippage === value
-                      ? 'border-amber-500 bg-amber-500/10 text-amber-400'
-                      : 'border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-600'
-                  }`}
-                >
-                  {value}%
-                </button>
-              ))}
-              <button className="px-3 py-1.5 text-xs border border-slate-700 bg-slate-900 text-slate-300 hover:border-slate-600 rounded-lg transition-colors duration-200">
-                Custom
-              </button>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-2">
-            <button className="py-2 bg-green-500 hover:bg-green-600 text-white text-sm font-semibold rounded-lg transition-all duration-200">
+          <div className="grid grid-cols-2 gap-1.5">
+            <button className="py-1.5 bg-green-500/20 hover:bg-green-500 border border-green-500/40 hover:border-green-500 text-green-400 hover:text-white text-xs font-semibold rounded transition-all duration-200">
               BUY
             </button>
-            <button className="py-2 bg-red-500 hover:bg-red-600 text-white text-sm font-semibold rounded-lg transition-all duration-200">
+            <button className="py-1.5 bg-red-500/20 hover:bg-red-500 border border-red-500/40 hover:border-red-500 text-red-400 hover:text-white text-xs font-semibold rounded transition-all duration-200">
               SELL
             </button>
-          </div>
-
-          <div className="text-center text-xs text-slate-400">
-            Balance: 2.45 SOL
           </div>
         </div>
       )}
