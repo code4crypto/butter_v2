@@ -1,12 +1,17 @@
 import { Users, Target } from 'lucide-react';
 
-export function ValueProps() {
+interface ValuePropsProps {
+  onInstallBot?: () => void;
+  onLaunchApp?: () => void;
+}
+
+export function ValueProps({ onInstallBot, onLaunchApp }: ValuePropsProps) {
   return (
     <section className="py-24 px-6 bg-gradient-to-b from-brown-900 to-brown-800">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Built for <span className="text-butter-400">Two Audiences</span>
+            <span className="text-yellow-300">Built for</span> <span className="text-butter-400">Two Audiences</span>
           </h2>
           <p className="text-xl text-brown-200">
             Whether you create alpha or trade it, Butter has you covered
@@ -23,7 +28,7 @@ export function ValueProps() {
                   <Users className="w-8 h-8 text-butter-400" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold">Group Owners</h3>
+                  <h3 className="text-2xl font-bold text-yellow-200">Group Owners</h3>
                   <p className="text-sm text-butter-400">Alpha Creators</p>
                 </div>
               </div>
@@ -36,27 +41,30 @@ export function ValueProps() {
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-400 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Monetize Your Alpha</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Monetize Your Alpha</h4>
                     <p className="text-sm text-brown-300">Earn rewards for quality calls that drive community value</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-400 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Grow Your Community</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Grow Your Community</h4>
                     <p className="text-sm text-brown-300">Transparent attribution brings credibility and new members</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-400 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Track Performance</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Track Performance</h4>
                     <p className="text-sm text-brown-300">Analytics dashboard shows your community's impact and earnings</p>
                   </div>
                 </div>
               </div>
 
-              <button className="w-full mt-8 px-6 py-4 bg-butter-400 hover:bg-butter-500 text-brown-900 rounded-2xl font-semibold transition-all duration-300 hover:scale-105">
+              <button 
+                onClick={onInstallBot}
+                className="w-full mt-8 px-6 py-4 bg-butter-400 hover:bg-butter-500 text-yellow-800 rounded-2xl font-semibold transition-all duration-300 hover:scale-105"
+              >
                 Install Butter Bot
               </button>
             </div>
@@ -71,7 +79,7 @@ export function ValueProps() {
                   <Target className="w-8 h-8 text-butter-300" />
                 </div>
                 <div>
-                  <h3 className="text-2xl font-bold">Traders</h3>
+                  <h3 className="text-2xl font-bold text-yellow-200">Traders</h3>
                   <p className="text-sm text-butter-300">Community Members</p>
                 </div>
               </div>
@@ -84,27 +92,30 @@ export function ValueProps() {
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-300 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Never Miss a Call</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Never Miss a Call</h4>
                     <p className="text-sm text-brown-300">Real-time feed aggregates alpha from all your trusted sources</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-300 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Trade with Confidence</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Trade with Confidence</h4>
                     <p className="text-sm text-brown-300">Every signal backed by on-chain data and historical performance</p>
                   </div>
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="w-1.5 h-1.5 rounded-full bg-butter-300 mt-2 flex-shrink-0" />
                   <div>
-                    <h4 className="font-semibold mb-1">Execute Instantly</h4>
+                    <h4 className="font-semibold mb-1 text-yellow-200">Execute Instantly</h4>
                     <p className="text-sm text-brown-300">Manual or auto-trading with real-time charts and analytics</p>
                   </div>
                 </div>
               </div>
 
-              <button className="w-full mt-8 px-6 py-4 bg-brown-600 hover:bg-brown-500 border-2 border-butter-400/30 rounded-2xl font-semibold transition-all duration-300 hover:scale-105">
+              <button 
+                onClick={onLaunchApp}
+                className="w-full mt-8 px-6 py-4 bg-brown-600 hover:bg-brown-500 border-2 border-butter-400/30 rounded-2xl font-semibold transition-all duration-300 hover:scale-105"
+              >
                 Launch Terminal
               </button>
             </div>

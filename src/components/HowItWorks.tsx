@@ -33,7 +33,7 @@ export function HowItWorks() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            How It <span className="text-butter-400">Works</span>
+            <span className="text-yellow-300">How It</span> <span className="text-butter-400">Works</span>
           </h2>
           <p className="text-xl text-brown-200">
             From community chatter to actionable trades in milliseconds
@@ -59,7 +59,7 @@ export function HowItWorks() {
                     {index + 1}
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3">{step.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 text-yellow-200">{step.title}</h3>
                   <p className="text-brown-200 text-sm leading-relaxed">{step.description}</p>
                 </div>
 
@@ -71,17 +71,17 @@ export function HowItWorks() {
           })}
         </div>
 
-        <div className="mt-16 p-8 bg-butter-400/10 rounded-2xl border border-butter-400/30">
+        {/* <div className="mt-16 p-8 bg-butter-400/10 rounded-2xl border border-butter-400/30">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
-              <h3 className="text-2xl font-bold mb-2">See It In Action</h3>
+              <h3 className="text-2xl font-bold mb-2 text-yellow-200">See It In Action</h3>
               <p className="text-brown-200">Watch how Butter Terminal transforms raw chat data into profitable signals</p>
             </div>
-            <button className="px-6 py-3 bg-butter-400 hover:bg-butter-500 text-brown-900 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 whitespace-nowrap">
+            <button className="px-6 py-3 bg-butter-400 hover:bg-butter-500 text-yellow-800 rounded-2xl font-semibold transition-all duration-300 hover:scale-105 whitespace-nowrap">
               View Demo
             </button>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   );

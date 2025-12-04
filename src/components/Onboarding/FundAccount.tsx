@@ -20,7 +20,7 @@ export function FundAccount({ onBack, onComplete, walletAddress }: FundAccountPr
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900 flex items-center justify-center px-4">
+    <div className="min-h-screen bg-gradient-to-br from-brown-900 via-brown-800 to-brown-900 flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8">
         <button
           onClick={onBack}
@@ -45,12 +45,12 @@ export function FundAccount({ onBack, onComplete, walletAddress }: FundAccountPr
               Butter Wallet Address
             </label>
             <div className="flex gap-2">
-              <div className="flex-1 py-3 px-4 bg-slate-800/50 border border-slate-700 rounded-xl text-white font-mono text-sm overflow-hidden">
+              <div className="flex-1 py-3 px-4 bg-brown-800/50 border border-slate-700 rounded-xl text-white font-mono text-sm overflow-hidden">
                 {walletAddress}
               </div>
               <button
                 onClick={handleCopy}
-                className="px-4 bg-slate-800/50 border border-slate-700 hover:border-amber-500 rounded-xl transition-colors duration-200"
+                className="px-4 bg-brown-800/50 border border-slate-700 hover:border-butter-500 rounded-xl transition-colors duration-200"
               >
                 <Copy className={`w-5 h-5 ${copied ? 'text-green-400' : 'text-slate-400'}`} />
               </button>
@@ -71,8 +71,8 @@ export function FundAccount({ onBack, onComplete, walletAddress }: FundAccountPr
                   onClick={() => setSelectedAmount(amount)}
                   className={`py-4 px-3 rounded-xl border-2 transition-all duration-200 ${
                     selectedAmount === amount
-                      ? 'border-amber-500 bg-amber-500/10 text-amber-400'
-                      : 'border-slate-700 bg-slate-800/50 text-slate-300 hover:border-slate-600'
+                      ? 'border-butter-500 bg-butter-500/10 text-butter-400'
+                      : 'border-slate-700 bg-brown-800/50 text-slate-300 hover:border-slate-600'
                   }`}
                 >
                   <div className="text-lg font-semibold">{amount}</div>
@@ -83,7 +83,7 @@ export function FundAccount({ onBack, onComplete, walletAddress }: FundAccountPr
           </div>
 
           <button
-            className="w-full py-4 px-6 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-amber-500/30 hover:shadow-amber-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+            className="w-full py-4 px-6 bg-butter-400 hover:bg-butter-500 text-yellow-800 font-semibold rounded-xl transition-all duration-200 shadow-lg shadow-butter-400/30 hover:shadow-butter-500/50 hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
             disabled={!selectedAmount}
           >
             Transfer from Wallet

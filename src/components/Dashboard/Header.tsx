@@ -5,9 +5,27 @@ interface HeaderProps {
   balance: string;
   walletAddress: string;
   onSearch: (query: string) => void;
+  onViewWallet?: () => void;
+  onViewHistory?: () => void;
+  onViewDeposit?: () => void;
+  onViewWithdraw?: () => void;
+  onViewSettings?: () => void;
+  onBackToDashboard?: () => void;
+  showBackToDashboard?: boolean;
 }
 
-export function Header({ balance, walletAddress, onSearch }: HeaderProps) {
+export function Header({ 
+  balance, 
+  walletAddress, 
+  onSearch,
+  onViewWallet,
+  onViewHistory,
+  onViewDeposit,
+  onViewWithdraw,
+  onViewSettings,
+  onBackToDashboard,
+  showBackToDashboard = false,
+}: HeaderProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [showAccountMenu, setShowAccountMenu] = useState(false);
   const [showBalanceMenu, setShowBalanceMenu] = useState(false);
@@ -23,6 +41,14 @@ export function Header({ balance, walletAddress, onSearch }: HeaderProps) {
       <div className="max-w-[1920px] mx-auto px-4 py-4">
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
+            {showBackToDashboard && onBackToDashboard && (
+              <button
+                onClick={onBackToDashboard}
+                className="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-white text-sm rounded-lg transition-colors duration-200"
+              >
+                ← Trading
+              </button>
+            )}
             <h1 className="text-xl font-bold text-white hidden md:block">Butter Terminal</h1>
             <div className="flex items-center gap-2 text-sm">
               <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
@@ -55,19 +81,34 @@ export function Header({ balance, walletAddress, onSearch }: HeaderProps) {
               </button>
 
               {showAccountMenu && (
-                <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl">
+                <div className="absolute right-0 mt-2 w-48 bg-slate-800 border border-slate-700 rounded-lg shadow-xl z-50">
                   <div className="p-2 space-y-1">
-                    <button className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        setShowAccountMenu(false);
+                        onViewWallet?.();
+                      }}
+                      className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2"
+                    >
                       <Wallet className="w-4 h-4" />
                       Portfolio
                     </button>
-                    <button className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2">
-                      📊 Open Positions
-                    </button>
-                    <button className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        setShowAccountMenu(false);
+                        onViewHistory?.();
+                      }}
+                      className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2"
+                    >
                       📝 Order History
                     </button>
-                    <button className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2">
+                    <button 
+                      onClick={() => {
+                        setShowAccountMenu(false);
+                        onViewSettings?.();
+                      }}
+                      className="w-full text-left px-3 py-2 text-slate-300 hover:bg-slate-700 rounded flex items-center gap-2"
+                    >
                       <Settings className="w-4 h-4" />
                       Settings
                     </button>
@@ -97,10 +138,22 @@ export function Header({ balance, walletAddress, onSearch }: HeaderProps) {
                       <p className="text-white text-xl font-bold">{balance}</p>
                     </div>
                     <div className="space-y-2">
-                      <button className="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-lg transition-colors duration-200">
+                      <button 
+                        onClick={() => {
+                          setShowBalanceMenu(false);
+                          onViewDeposit?.();
+                        }}
+                        className="w-full py-2 bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold rounded-lg transition-colors duration-200"
+                      >
                         Add Funds
                       </button>
-                      <button className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors duration-200">
+                      <button 
+                        onClick={() => {
+                          setShowBalanceMenu(false);
+                          onViewWithdraw?.();
+                        }}
+                        className="w-full py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors duration-200"
+                      >
                         Withdraw
                       </button>
                     </div>

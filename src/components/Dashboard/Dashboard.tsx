@@ -7,7 +7,21 @@ import { useWebSocket } from '../../hooks/useWebSocket';
 
 const MOCK_COMMUNITIES = ['All', 'Sauce', 'Alpha DAO', 'Degen Grp', 'Crypto CT'];
 
-export function Dashboard() {
+interface DashboardProps {
+  onViewWallet?: () => void;
+  onViewHistory?: () => void;
+  onViewDeposit?: () => void;
+  onViewWithdraw?: () => void;
+  onViewSettings?: () => void;
+}
+
+export function Dashboard({
+  onViewWallet,
+  onViewHistory,
+  onViewDeposit,
+  onViewWithdraw,
+  onViewSettings,
+}: DashboardProps) {
   const [activeTab, setActiveTab] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [tokens, setTokens] = useState<TokenData[]>([]);
@@ -44,6 +58,14 @@ export function Dashboard() {
           value: candle.close,
         }));
 
+        const ohlc = ohlcvArray.map(c => ({
+          time: c.time,
+          open: c.open,
+          high: c.high,
+          low:  c.low,
+          close:c.close,
+        }));
+
         const latestCandle = ohlcvArray[ohlcvArray.length - 1];
         const firstCandle = ohlcvArray[0];
         const priceChange = firstCandle.close > 0
@@ -53,9 +75,10 @@ export function Dashboard() {
         return {
           ...token,
           priceChange,
-          volume: `$${(latestCandle.volume.dollar / 1000).toFixed(1)}K`,
+          volume: latestCandle?.volume?.dollar !== undefined ? `$${(latestCandle.volume.dollar / 1000).toFixed(1)}K` : token.volume,
           marketCap: latestCandle.marketCap ? `$${(latestCandle.marketCap / 1000).toFixed(1)}K` : token.marketCap,
           chartData: chartData.length > 0 ? chartData : token.chartData,
+          ohlc: ohlc.length > 0 ? ohlc : token.ohlc,
         };
       })
     );
@@ -72,6 +95,11 @@ export function Dashboard() {
         balance="$1,234.56"
         walletAddress="0x1234...5678"
         onSearch={setSearchQuery}
+        onViewWallet={onViewWallet}
+        onViewHistory={onViewHistory}
+        onViewDeposit={onViewDeposit}
+        onViewWithdraw={onViewWithdraw}
+        onViewSettings={onViewSettings}
       />
 
       <CommunityTabs
@@ -91,7 +119,7 @@ export function Dashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6">
               {filteredTokens.map((token) => (
                 <TokenCard
-                  key={token.symbol}
+                  key={token.contract || token.symbol}
                   token={token}
                   onTrade={(token) => console.log('Trade', token)}
                 />

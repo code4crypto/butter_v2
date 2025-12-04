@@ -25,7 +25,8 @@ export interface TokenData {
   buyTxns: number;
   sellTxns: number;
   imageUrl?: string;
-  chartData: Array<{ time: number; value: number }>;
+  chartData: Array<{ time: number; value: number }>; // close-only sparkline (kept for compatibility)
+  ohlc?: Array<{ time: number; open: number; high: number; low: number; close: number }>; // true OHLC for candlesticks
 }
 
 export interface APITokenResponse {
@@ -33,11 +34,81 @@ export interface APITokenResponse {
   lastUpdate: string;
 }
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '';
+
+// Transform OHLC candles -> MiniChart data format
+function candlesToMini(candles: Array<{ time: string; open: string; high: string; low: string; close: string; volume?: string }>): Array<{ time: number; value: number }> {
+  return (candles || [])
+    .map(c => ({ time: Math.floor(new Date(c.time).getTime() / 1000), value: parseFloat(c.close) }))
+    .filter(p => Number.isFinite(p.value) && p.time > 0)
+    .sort((a, b) => a.time - b.time);
+}
+
+function candlesToOHLC(candles: Array<{ time: string; open: string; high: string; low: string; close: string }>): Array<{ time: number; open: number; high: number; low: number; close: number }>{
+  return (candles || [])
+    .map(c => ({
+      time: Math.floor(new Date(c.time).getTime() / 1000),
+      open: parseFloat(c.open),
+      high: parseFloat(c.high),
+      low: parseFloat(c.low),
+      close: parseFloat(c.close),
+    }))
+    .filter(c => [c.open,c.high,c.low,c.close].every(Number.isFinite))
+    .sort((a,b)=>a.time-b.time);
+}
 
 export async function fetchTokens(community?: string): Promise<TokenData[]> {
-  console.log('=== MOCK DATA ONLY - NO API ===');
-  return getMockTokens();
+  try {
+    const res = await fetch(`${API_BASE_URL}/OHLCV/api/tokens/active?hours=96`, {
+      headers: { 'Cache-Control': 'no-cache', 'Pragma': 'no-cache' }
+    });
+    if (!res.ok) throw new Error(`Failed tokens: ${res.status}`);
+    const data = await res.json();
+
+    const tokens: TokenData[] = (data?.contracts || [])
+      .map((c: any) => {
+        const chartData = candlesToMini(c.candles || []);
+        const ohlc = candlesToOHLC(c.candles || []);
+        const latest = c.candles?.[c.candles.length - 1];
+        const marketCap = latest?.marketCap ? `$${Number(latest.marketCap).toLocaleString()}` : '$0';
+        return {
+          name: c.name || 'Unknown',
+          symbol: c.symbol || '',
+          contract: c.contractAddress,
+          marketCap,
+          liquidity: '-',
+          volume: '-',
+          volume5m: '-',
+          buys: 0,
+          buyVolume: '-',
+          sells: 0,
+          sellVolume: '-',
+          netVolume: '-',
+          priceChange: 0,
+          top10Holders: '-',
+          devHoldings: '-',
+          snipersHoldings: '-',
+          insiders: '-',
+          bundlers: '-',
+          lpBurned: '-',
+          holders: 0,
+          proTraders: 0,
+          dexPaid: '-',
+          txns: 0,
+          buyTxns: 0,
+          sellTxns: 0,
+          chartData,
+          ohlc,
+        } as TokenData;
+      })
+      .filter((t: TokenData) => t.contract && t.chartData.length > 0);
+
+    // Optional: filter by community if provided and present on item
+    return tokens;
+  } catch (e) {
+    console.warn('Falling back to mocks:', e);
+    return getMockTokens();
+  }
 }
 
 export async function fetchTokenDetails(symbol: string): Promise<TokenData | null> {

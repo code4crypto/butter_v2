@@ -30,7 +30,7 @@ export function TokenCard({ token, onTrade }: TokenCardProps) {
       onMouseEnter={() => setIsExpanded(true)}
       onMouseLeave={() => setIsExpanded(false)}
     >
-      <div className="p-4 space-y-3">
+      <div className="p-3 space-y-2">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
             {token.imageUrl ? (
@@ -58,13 +58,15 @@ export function TokenCard({ token, onTrade }: TokenCardProps) {
           </button>
         </div>
 
-        <div className="h-24 bg-slate-900/50 rounded-lg overflow-hidden">
-          {token.chartData.length > 0 ? (
+        <div className="h-40 bg-slate-900/50 rounded-lg overflow-hidden">
+          {token.ohlc && token.ohlc.length > 0 ? (
             <MiniChart
-              data={token.chartData}
+              candles={token.ohlc}
               color={isPositive ? '#10b981' : '#ef4444'}
-              height={96}
+              height={160}
             />
+          ) : token.chartData.length > 0 ? (
+            <MiniChart data={token.chartData} color={isPositive ? '#10b981' : '#ef4444'} height={160} />
           ) : (
             <div className="h-full flex items-center justify-center">
               <div className="text-slate-600 text-xs">Loading chart...</div>

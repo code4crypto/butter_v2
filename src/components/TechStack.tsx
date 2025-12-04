@@ -15,7 +15,7 @@ export function TechStack() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Built on <span className="text-butter-400">Enterprise Infrastructure</span>
+            <span className="text-yellow-300">Built on</span> <span className="text-butter-400">Enterprise Infrastructure</span>
           </h2>
           <p className="text-xl text-brown-200">
             Powered by our in-house on-chain infrastructure
@@ -41,7 +41,7 @@ export function TechStack() {
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-butter-400/20 mb-4">
               <Zap className="w-6 h-6 text-butter-400" />
             </div>
-            <h3 className="text-xl font-bold mb-2">High Performance</h3>
+            <h3 className="text-xl font-bold mb-2 text-yellow-200">High Performance</h3>
             <p className="text-brown-200 text-sm">
               Process millions of messages per day with sub-second latency
             </p>
@@ -51,7 +51,7 @@ export function TechStack() {
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-butter-400/20 mb-4">
               <Lock className="w-6 h-6 text-butter-400" />
             </div>
-            <h3 className="text-xl font-bold mb-2">Enterprise Security</h3>
+            <h3 className="text-xl font-bold mb-2 text-yellow-200">Enterprise Security</h3>
             <p className="text-brown-200 text-sm">
               Bank-grade encryption and secure custody of all trading credentials
             </p>
@@ -61,7 +61,7 @@ export function TechStack() {
             <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-butter-400/20 mb-4">
               <Server className="w-6 h-6 text-butter-400" />
             </div>
-            <h3 className="text-xl font-bold mb-2">99.9% Uptime</h3>
+            <h3 className="text-xl font-bold mb-2 text-yellow-200">99.9% Uptime</h3>
             <p className="text-brown-200 text-sm">
               Distributed infrastructure ensures you never miss critical alpha
             </p>

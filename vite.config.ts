@@ -7,4 +7,15 @@ export default defineConfig({
   optimizeDeps: {
     exclude: ['lucide-react'],
   },
+  server: {
+    host: true,
+    port: 5173,
+    proxy: {
+      '/OHLCV': {
+        target: 'https://api.buttertrade.xyz',
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+  },
 });

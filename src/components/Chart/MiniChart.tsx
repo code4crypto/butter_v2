@@ -2,15 +2,16 @@ import { useEffect, useRef } from 'react';
 import { createChart, ColorType, type IChartApi, type ISeriesApi } from 'lightweight-charts';
 
 interface MiniChartProps {
-  data: Array<{ time: number; value: number }>;
+  data?: Array<{ time: number; value: number }>;
+  candles?: Array<{ time: number; open: number; high: number; low: number; close: number }>;
   color?: string;
   height?: number;
 }
 
-export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartProps) {
+export function MiniChart({ data = [], candles = [], color = '#10b981', height = 96 }: MiniChartProps) {
   const chartContainerRef = useRef<HTMLDivElement>(null);
   const chartRef = useRef<IChartApi | null>(null);
-  const seriesRef = useRef<ISeriesApi<'Area'> | null>(null);
+  const seriesRef = useRef<ISeriesApi<'Area' | 'Candlestick'> | null>(null);
 
   useEffect(() => {
     if (!chartContainerRef.current) return;
@@ -46,15 +47,20 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
       handleScale: false,
     });
 
-    console.log('Chart created successfully, adding area series');
-      const series = chart.addAreaSeries({
-      lineColor: color,
-      topColor: color + '40',
-      bottomColor: color + '00',
-      lineWidth: 2,
-      priceLineVisible: false,
-      lastValueVisible: false,
-    });
+    console.log('Chart created successfully, adding series');
+      const series = candles.length > 0
+        ? chart.addCandlestickSeries({
+            upColor: '#10b981', downColor: '#ef4444', borderVisible: false,
+            wickUpColor: '#10b981', wickDownColor: '#ef4444',
+          })
+        : chart.addAreaSeries({
+            lineColor: color,
+            topColor: color + '40',
+            bottomColor: color + '00',
+            lineWidth: 2,
+            priceLineVisible: false,
+            lastValueVisible: false,
+          });
 
     chartRef.current = chart;
     seriesRef.current = series;
@@ -79,17 +85,21 @@ export function MiniChart({ data, color = '#10b981', height = 96 }: MiniChartPro
   }, [color, height]);
 
   useEffect(() => {
-    if (seriesRef.current && data.length > 0) {
-      try {
+    if (!seriesRef.current) return;
+    try {
+      if (candles.length > 0) {
+        // @ts-expect-error candlestick runtime accepts array
+        seriesRef.current.setData(candles);
+      } else if (data.length > 0) {
         seriesRef.current.setData(data);
-        if (chartRef.current) {
-          chartRef.current.timeScale().fitContent();
-        }
-      } catch (error) {
-        console.error('Error setting chart data:', error);
       }
+      if (chartRef.current) {
+        chartRef.current.timeScale().fitContent();
+      }
+    } catch (error) {
+      console.error('Error setting chart data:', error);
     }
-  }, [data]);
+  }, [data, candles]);
 
-  return <div ref={chartContainerRef} className="w-full" />;
+  return <div ref={chartContainerRef} className="w-full" style={{ height }} />;
 }

@@ -15,8 +15,21 @@ export function useWebSocket(contracts: string[], timeframe: string = '1m') {
       setData(prev => {
         const newMap = new Map(prev);
         const existing = newMap.get(ohlcvData.contractAddress) || [];
-        const updated = [...existing, ohlcvData].slice(-100);
-        newMap.set(ohlcvData.contractAddress, updated);
+
+        // Merge by candle time: replace if same time, append otherwise
+        const idx = existing.findIndex(c => c.time === ohlcvData.time);
+        let next: OHLCVData[];
+        if (idx >= 0) {
+          next = existing.slice();
+          next[idx] = ohlcvData; // replace running/complete candle
+        } else {
+          next = [...existing, ohlcvData];
+        }
+
+        // Keep bounded history
+        if (next.length > 200) next = next.slice(-200);
+
+        newMap.set(ohlcvData.contractAddress, next);
         return newMap;
       });
     });

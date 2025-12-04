@@ -39,7 +39,7 @@ export function Features() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Built for <span className="text-butter-400">Serious Traders</span>
+            <span className="text-yellow-300">Built for</span> <span className="text-butter-400">Serious Traders</span>
           </h2>
           <p className="text-xl text-brown-200 max-w-2xl mx-auto">
             Every feature designed to give you an edge in the fast-moving crypto markets
@@ -61,7 +61,7 @@ export function Features() {
                     <Icon className="w-7 h-7 text-butter-400" />
                   </div>
 
-                  <h3 className="text-xl font-bold mb-3">{feature.title}</h3>
+                  <h3 className="text-xl font-bold mb-3 text-yellow-200">{feature.title}</h3>
                   <p className="text-brown-200 leading-relaxed">{feature.description}</p>
                 </div>
               </div>
